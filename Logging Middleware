@@ -1,0 +1,32 @@
+const LOG_API_URL = 'http://20.244.56.144/evaluation-service/logs';
+
+const BEARER_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiYXVkIjoiaHR0cDovLzIwLjI0NC41Ni4xNDQvZXZhbHVhdGlvbi1zZXJ2aWNlIiwiZW1haWwiOiJwcmVldGhpYXNocml0aGFndW5uYW1AZ21haWwuY29tIiwiZXhwIjoxNzUwOTIwNDk5LCJpYXQiOjE3NTA5MTk1OTksImlzcyI6IkFmZm9yZCBNZWRpY2FsIFRlY2hub2xvZ2llcyBQcml2YXRlIExpbWl0ZWQiLCJqdGkiOiIwOGY5NDZmZC0yM2E0LTRmNjQtYmY1ZS1jODkyMzdkMTQyOGQiLCJsb2NhbGUiOiJlbi1JTiIsIm5hbWUiOiJwcmVldGhpIGFzaHJpdGhhIGd1bm5hbSIsInN1YiI6ImY2N2Q1NGZkLWI4NTctNDRhNi1iY2RmLTk2YzMwOTY2YTNiZCJ9LCJlbWFpbCI6InByZWV0aGlhc2hyaXRoYWd1bm5hbUBnbWFpbC5jb20iLCJuYW1lIjoicHJlZXRoaSBhc2hyaXRoYSBndW5uYW0iLCJyb2xsTm8iOiIyMnAzMWE0MjE1IiwiYWNjZXNzQ29kZSI6Ik5Gd2dSVCIsImNsaWVudElEIjoiZjY3ZDU0ZmQtYjg1Ny00NGE2LWJjZGYtOTZjMzA5NjZhM2JkIiwiY2xpZW50U2VjcmV0IjoibnpYTWpFdWRyRk1VRUF6QSJ9.uflpCziCaHwAqvrYCMfxAsNVAryvuFkUjVtPMftNF3I"; // IMPORTANT: Replace with your actual token
+async function logToServer(stack, level, pkg, msg) {
+  try {
+    const response = await fetch(LOG_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': Bearer ${BEARER_TOKEN}
+      },
+      body: JSON.stringify({
+        stack: stack,
+        level: level,
+        package: pkg, 
+        message: msg
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(Failed to send log. Status: ${response.status}, errorText);
+      return;
+    }
+
+    const responseData = await response.json();
+    console.log('Log sent successfully:', responseData);
+
+  } catch (error) {
+    console.error('An exception occurred while sending the log:', error);
+  }
+}
